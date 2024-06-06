@@ -9,11 +9,13 @@ import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import com.sparta.newsfeedteamproject.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -39,6 +41,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<BaseResDto> login() {
+        log.info("login api");
         BaseResDto resDto = new BaseResDto(HttpStatus.OK.value(), "로그인이 완료되었습니다",null);
         return new ResponseEntity<>(resDto, HttpStatus.NO_CONTENT);
     }

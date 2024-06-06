@@ -65,10 +65,8 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
                 setAuthentication(info.getSubject());
 
-            } else {
-                throw new IllegalArgumentException("유효하지 않은 토큰입니다. 다시 로그인해주세요.");
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
             FilterExceptionHandler.handleExceptionInFilter(res, e);
             return;

@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Key;
 import java.util.Base64;
@@ -36,7 +37,7 @@ public class JwtProvider {
     @Value("${jwt.secret.key}")
     private String secretKey;
     private Key key;
-    private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.ES256;
+    private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
     @PostConstruct
     public void init() {
@@ -57,10 +58,11 @@ public class JwtProvider {
                         .compact();
     }
 
+    @Transactional
     public String createRefreshToken(String username, Status status) {
         Date date = new Date();
 
-        return BEARER_PREFIX +
+        String refreshToken = BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(username)
                         .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_TIME))
@@ -68,14 +70,20 @@ public class JwtProvider {
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
                         .compact();
+
+        User user = userRepository.findByUsername(username).orElseThrow( () -> new IllegalArgumentException("username not found"));
+        log.info(username);
+        user.updateRefreshToken(refreshToken);
+        log.info(user.getRefreshToken());
+        return refreshToken;
     }
 
     public String getJwtFromHeader(HttpServletRequest request, String token) {
         return request.getHeader(token);
     }
 
-    public String substringToken(String token){
-        if(!token.startsWith(BEARER_PREFIX)) {
+    public String substringToken(String token) {
+        if (!token.startsWith(BEARER_PREFIX)) {
             throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
         }
         return token.substring(7);
