@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 public class AuthorizationFilter extends OncePerRequestFilter {
@@ -36,6 +37,8 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         try {
             String accessTokenValue = jwtProvider.getJwtFromHeader(req, JwtProvider.ACCESS_TOKEN_HEADER);
             String refreshTokenValue = jwtProvider.getJwtFromHeader(req, JwtProvider.REFRESH_TOKEN_HEADER);
+            log.info(accessTokenValue);
+            log.info(refreshTokenValue);
 
             if (StringUtils.hasText(accessTokenValue)) {
 
@@ -53,8 +56,9 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                 Claims info = jwtProvider.getUserInfoFromToken(accessTokenValue);
 
                 UserDetailsImpl userDetailsImpl = (UserDetailsImpl) userDetailsService.loadUserByUsername(info.getSubject());
+                log.info(info.getSubject());
 
-                if (!(refreshTokenValue == userDetailsImpl.getUser().getRefreshToken())) {
+                if (!(Objects.equals(refreshTokenValue,jwtProvider.substringToken((userDetailsImpl.getUser().getRefreshToken()))))) {
                     throw new IllegalArgumentException("유효하지 않은 토큰입니다. 다시 로그인해주세요.");
                 }
 

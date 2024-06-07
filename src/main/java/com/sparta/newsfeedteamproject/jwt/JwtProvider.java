@@ -115,8 +115,8 @@ public class JwtProvider {
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalArgumentException("해당 이름을 가진 사용자가 없습니다.")
         );
-        String accessToken = createAccessToken(user.getName(), user.getStatus());
-        String refreshToken = createRefreshToken(user.getName(), user.getStatus());
+        String accessToken = createAccessToken(user.getUsername(), user.getStatus());
+        String refreshToken = createRefreshToken(user.getUsername(), user.getStatus());
 
         response.addHeader(ACCESS_TOKEN_HEADER, accessToken);
         response.addHeader(REFRESH_TOKEN_HEADER, refreshToken);

@@ -6,6 +6,7 @@ import com.sparta.newsfeedteamproject.dto.user.UpdateReqDto;
 import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.entity.User;
+import com.sparta.newsfeedteamproject.jwt.JwtProvider;
 import com.sparta.newsfeedteamproject.repository.UserRepository;
 import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
     public void signup(SignupReqDto reqDto) {
 
@@ -68,8 +70,10 @@ public class UserService {
     }
 
     @Transactional
-    public void logout(UserDetailsImpl userDetails) {
-        User user = userDetails.getUser();
+    public void logout(String token) {
+        User user = userRepository.findByUsername(jwtProvider.getUserInfoFromToken(token).getSubject()).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
+        );
         user.deleteRefreshToken();
     }
 

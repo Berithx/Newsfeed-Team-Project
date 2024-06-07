@@ -8,9 +8,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseResDto<T> {
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private int statusCode;
     private String message;
     private T data;
