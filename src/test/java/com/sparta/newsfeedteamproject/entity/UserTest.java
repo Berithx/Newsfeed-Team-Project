@@ -151,4 +151,108 @@ class UserTest {
         // then
         assertTrue(exception.getMessage().contains("RefreshToken이 Null입니다."));
     }
+
+    @Test
+    @DisplayName("setUsername 메서드 테스트")
+    void testSetUsername() {
+        // given
+        User user = new User(username, password, name, email, userInfo, status, statusModTime);
+
+        // when
+        user.setUsername("New Username");
+
+        // then
+        assertEquals("New Username", user.getUsername());
+    }
+
+    @Test
+    @DisplayName("setPassword 메서드 테스트")
+    void testSetPassword() {
+        // given
+        User user = new User(username, password, name, email, userInfo, status, statusModTime);
+
+        // when
+        user.setPassword("NewPassword");
+
+        // then
+        assertEquals("NewPassword", user.getPassword());
+    }
+
+    @Test
+    @DisplayName("setName 메서드 테스트")
+    void testSetName() {
+        // given
+        User user = new User(username, password, name, email, userInfo, status, statusModTime);
+
+        // when
+        user.setName("New Name");
+
+        // then
+        assertEquals("New Name", user.getName());
+    }
+
+    @Test
+    @DisplayName("setEmail 메서드 테스트")
+    void testSetEmail() {
+        // given
+        User user = new User(username, password, name, email, userInfo, status, statusModTime);
+
+        // when
+        user.setEmail("NewMail@test.com");
+
+        // then
+        assertEquals("NewMail@test.com", user.getEmail());
+    }
+
+    @Test
+    @DisplayName("setUserInfo 메서드 테스트")
+    void testSetUserInfo() {
+        // given
+        User user = new User(username, password, name, email, userInfo, status, statusModTime);
+
+        // when
+        user.setUserInfo("New UserInfo");
+
+        // then
+        assertEquals("New UserInfo", user.getUserInfo());
+    }
+
+    @Test
+    @DisplayName("setStatus 메서드 테스트")
+    void testSetStatus() {
+        // given
+        User user = new User(username, password, name, email, userInfo, status, statusModTime);
+
+        // when
+        user.setStatus(Status.DEACTIVATE);
+
+        // then
+        assertEquals(Status.DEACTIVATE, user.getStatus());
+    }
+
+    @Test
+    @DisplayName("setRefreshToken 메서드 테스트")
+    void testSetRefreshToken() {
+        // given
+        User user = new User(username, password, name, email, userInfo, status, statusModTime);
+
+        // when
+        user.setRefreshToken("New Token");
+
+        // then
+        assertEquals("New Token", user.getRefreshToken());
+    }
+
+    @Test
+    @DisplayName("setStatusModTime 메서드 테스트")
+    void testSetStatusModTime() {
+        // given
+        User user = new User(username, password, name, email, userInfo, status, statusModTime);
+
+        // when
+        user.setStatusModTime(LocalDateTime.now());
+
+        // then
+        assertEquals(LocalDateTime.now(), user.getStatusModTime());
+    }
 }
