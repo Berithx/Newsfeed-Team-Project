@@ -1,19 +1,18 @@
 package com.sparta.newsfeedteamproject.config;
 
-import com.sparta.newsfeedteamproject.jwt.JwtProvider;
 import com.sparta.newsfeedteamproject.security.AuthenticationFilter;
 import com.sparta.newsfeedteamproject.security.AuthorizationFilter;
 import com.sparta.newsfeedteamproject.security.UserDetailsServiceImpl;
+import com.sparta.newsfeedteamproject.util.JwtProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -30,11 +29,6 @@ public class SecurityConfig {
 
         this.userDetailsService = userDetailsService;
         this.authenticationConfiguration = authenticationConfiguration;
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -64,9 +58,13 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(
                 (authorizationHttpRequests) -> authorizationHttpRequests
-                        .requestMatchers("/users/signup", "/users/login").permitAll()
-                        .requestMatchers("/users/profile/{user_id}").permitAll()
-                        .requestMatchers("/feeds/{feed_id}", "/feeds/all").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/signup").permitAll()
+                        .requestMatchers("/users/signup/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/profile/{userId}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/feeds/{feedId}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/feeds/all").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/feeds/{feedId}/comments/{commentId}").permitAll()
                         .anyRequest().authenticated()
 
         );

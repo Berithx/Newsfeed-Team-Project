@@ -2,6 +2,38 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.1.0'
     id 'io.spring.dependency-management' version '1.1.0'
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = '0.8.7'
+}
+
+
+
+jacocoTestReport {
+    reports {
+        html.required = true
+        xml.required = true
+        csv.required = false
+
+    html.destination file("jacoco/jacoco.html")
+    xml.destination file("jacoco/jacoco.xml")
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = 'CLASS'
+
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.90
+            }
+        }
+    }
 }
 
 group = 'com.sparta'
@@ -22,6 +54,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -39,6 +72,12 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
     implementation 'org.json:json:20230227'
+
+    implementation 'io.lettuce:lettuce-core:6.3.2.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    testImplementation 'org.mockito:mockito-core:4.8.0'
 }
 
 tasks.named('test') {
