@@ -1,7 +1,9 @@
 package com.sparta.newsfeedteamproject.dto.user;
 
 import com.sparta.newsfeedteamproject.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
 public class ProfileResDto {
