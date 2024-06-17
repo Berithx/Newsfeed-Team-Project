@@ -96,6 +96,7 @@ public class UserService {
         return new ProfileResDto(checkUser);
     }
 
+    @Transactional
     public ProfileResDto editProfile(Long userId, UpdateReqDto reqDto, UserDetailsImpl userDetails) {
 
         String username = userDetails.getUser().getUsername();
@@ -126,8 +127,8 @@ public class UserService {
         String newPassword = passwordEncoder.encode(reqDto.getNewPassword());
         LocalDateTime modifiedAt = LocalDateTime.now();
 
-        checkUser.update(name, userInfo, newPassword, modifiedAt);
-        userRepository.save(checkUser);
+        checkUser.update(reqDto.getNewName(), reqDto.getNewUserInfo(), passwordEncoder.encode(reqDto.getNewPassword()), LocalDateTime.now());
+//        userRepository.save(checkUser);
 
         return new ProfileResDto(checkUser);
     }
